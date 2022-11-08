@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CadastroUsuario">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btn_ImagemVisitante"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_person_24" />
+
+        <EditText
+            android:id="@+id/edit_Text_NomeCompleto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="100"
+            android:hint="@string/hint"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_ImagemVisitante" />
+
+        <EditText
+            android:id="@+id/edit_Text_Documento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="100"
+            android:hint="Documento"
+            android:inputType="number"
+            android:maxLength="15"
+            app:layout_constraintEnd_toEndOf="@+id/edit_Text_NomeCompleto"
+            app:layout_constraintStart_toStartOf="@+id/edit_Text_NomeCompleto"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Text_NomeCompleto" />
+
+        <EditText
+            android:id="@+id/edit_Text_DatadeNascimento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="100"
+            android:hint="Data de Nascimento"
+            android:inputType="date"
+            app:layout_constraintEnd_toEndOf="@+id/edit_Text_Documento"
+            app:layout_constraintStart_toStartOf="@+id/edit_Text_Documento"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Text_Documento" />
+
+        <EditText
+            android:id="@+id/edit_Text_EndereçoAtual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:ems="100"
+            android:hint="Endereço Atual"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/edit_Text_DatadeNascimento"
+            app:layout_constraintStart_toStartOf="@+id/edit_Text_DatadeNascimento"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Text_DatadeNascimento" />
+
+        <Button
+            android:id="@+id/btn_SalvarCadastro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:text="Cadastrar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Text_EndereçoAtual" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
