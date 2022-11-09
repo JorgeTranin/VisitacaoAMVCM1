@@ -25,7 +25,7 @@
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="200dp"
-        android:backgroundTint="@color/teal_700"
+        android:backgroundTint="@color/black"
         android:onClick="onBtnRegistrodevisitacao"
         android:text="Registro de Visitação"
         app:layout_constraintBottom_toBottomOf="parent"
