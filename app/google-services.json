@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1022420399789",
+    "project_id": "amvcm-2046a",
+    "storage_bucket": "amvcm-2046a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022420399789:android:0acde63f7bb7fc389af824",
+        "android_client_info": {
+          "package_name": "com.example.visitacaoamvcm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022420399789-vl501hpsrquds6t1dftboa08mtamnffq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYhA2Zmv1LNbYUtLUc5DOFlML5KtdTAmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022420399789-vl501hpsrquds6t1dftboa08mtamnffq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BackgroudApp"
     tools:context=".MainActivity">
 
     <Button
@@ -25,7 +26,7 @@
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="200dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/purple_700"
         android:onClick="onBtnRegistrodevisitacao"
         android:text="Registro de Visitação"
         app:layout_constraintBottom_toBottomOf="parent"
