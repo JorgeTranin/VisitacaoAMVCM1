@@ -20,20 +20,27 @@ class CadastroUsuario : AppCompatActivity() {
             val Endereco = binding.editTextEndereOAtual.text.toString()
 
 
-            salvarNoticia(NomeVisitante, Documento, dataDeNascimento, Endereco)
+            salvarVisitante(NomeVisitante, Documento, dataDeNascimento, Endereco)
         }
 
 
 
     }
 
-    private fun salvarNoticia(NomeVisitante:String,Documento:String, dataDeNascimento:String, Endereco:String) {
+    private fun salvarVisitante(NomeVisitante:String, Documento:String, dataDeNascimento:String, Endereco:String) {
         val mapVisitantes = hashMapOf(
             "NomeVisitante" to NomeVisitante,
             "Documento" to Documento,
             "dataDeNascimento" to dataDeNascimento,
             "Endereco" to Endereco
         )
-        db.collection("Visitantes").document("Visitante").set()
+        db.collection("Visitantes").document("Visitante2").set(mapVisitantes).addOnCompleteListener {tarefa ->
+            if(tarefa.isSuccessful){
+                Toast.makeText(this, "Sucesso ao salvar", Toast.LENGTH_LONG).show()
+            }
+
+        }.addOnFailureListener {
+            Toast.makeText(this, "Falurie", Toast.LENGTH_LONG).show()
+        }
     }
 }
