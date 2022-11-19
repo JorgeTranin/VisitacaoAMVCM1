@@ -25,4 +25,7 @@
     <string name="e_mail">E-mail</string>
     <string name="senha">Senha</string>
     <string name="cadastrar">Cadastrar</string>
+    <string name="login_do_usuario">Login do Usuário</string>
+    <string name="Entrar">Entrar</string>
+    <string name="n_o_tem_um_cadastro_cadastre_se_aqui">Não tem um cadastro? Cadastre-se Aqui</string>
 </resources>
