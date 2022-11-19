@@ -36,4 +36,17 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_Visitantes"
         app:layout_constraintVertical_bias="0.503" />
 
+    <Button
+        android:id="@+id/btn_Deslogar"
+        android:layout_width="178dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="200dp"
+        android:layout_marginBottom="21dp"
+        android:onClick="onBtnDeslogar"
+        android:text="Deslogar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_RegistrodeVisitacao" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
