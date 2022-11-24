@@ -1,8 +1,9 @@
 package com.example.visitacaoamvcm
 
-import androidx.appcompat.app.AppCompatActivity
+import Business.mCategoriadeVisitantes
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -10,6 +11,7 @@ class CadastroUsuario : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
     private lateinit var binding: ActivityCadastroUsuarioBinding
+    var categoria: mCategoriadeVisitantes? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,11 +26,14 @@ class CadastroUsuario : AppCompatActivity() {
             val dataDeNascimento = binding.editTextDatadeNascimento.text.toString()
             val Endereco = binding.editTextEndereOAtual.text.toString()
 
+
+            categoria = intent.getParcelableExtra("categoriaNomw")
+
             //Validação para ver se os campos estão vazios
 
-            if (NomeVisitante.isEmpty() || Documento.isEmpty() || dataDeNascimento.isEmpty() || Endereco.isEmpty()){
-                Toast.makeText(this,"Preencha todos os campos", Toast.LENGTH_SHORT).show()
-            }else{
+            if (NomeVisitante.isEmpty() || Documento.isEmpty() || dataDeNascimento.isEmpty() || Endereco.isEmpty()) {
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+            } else {
                 //chamada da função do salvamento no DB passando os paramentros do visitante
                 salvarVisitante(NomeVisitante, Documento, dataDeNascimento, Endereco)
             }
@@ -37,6 +42,7 @@ class CadastroUsuario : AppCompatActivity() {
 
 
     }
+
     //Função responsavel por salvar no DB
     private fun salvarVisitante(
         NomeVisitante: String,
