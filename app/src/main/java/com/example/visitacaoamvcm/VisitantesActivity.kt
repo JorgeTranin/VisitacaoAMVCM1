@@ -7,12 +7,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.visitacaoamvcm.databinding.ActivityVisitantesBinding
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 
 class VisitantesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVisitantesBinding
     private var db: FirebaseFirestore? = null
+
+    private var reference: CollectionReference? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVisitantesBinding.inflate(layoutInflater)
@@ -20,24 +23,27 @@ class VisitantesActivity : AppCompatActivity() {
 
         //Instanciamento da minha variavel db com o firebase
         db = FirebaseFirestore.getInstance()
-        BuscarListaVisitantes()
 
+        //Variavel que fica com a instancia de DB
+        reference = db!!.collection("Visitantes")
+        BuscarListaVisitantes()
     }
 
+    // Função responsavel por navegar para a tela CadastroUsuario
     fun onBtnCadastro(view: View) {
         val intent = Intent(this, CadastroUsuario::class.java)
         startActivity(intent)
     }
 
-    //Função para recuperar os dados no DB
+
     fun BuscarListaVisitantes() {
-        // primeiro minha variavel db depois qual collecion quero acessar, depois falar qual documento quero acessar(seria qual visitante)
+
 
         // Variavel que irá armazenar a lista de Visitantes
         val listaDeVisitantes: MutableList<InfoCadastroDeVisitantes> =
             ArrayList<InfoCadastroDeVisitantes>();
 
-        db!!.collection("Visitantes").addSnapshotListener { visitantes, error ->
+        reference!!.addSnapshotListener { visitantes, error ->
             if (error != null) {
                 //caso aja algum erro de comunicação com o DB
                 Toast.makeText(
@@ -102,5 +108,4 @@ class VisitantesActivity : AppCompatActivity() {
 
 
     }
-
 }
