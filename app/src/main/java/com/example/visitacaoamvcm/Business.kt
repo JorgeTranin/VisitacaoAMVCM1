@@ -4,10 +4,9 @@
  import android.view.LayoutInflater
  import android.view.View
  import android.view.ViewGroup
- import android.view.ViewParent
  import androidx.recyclerview.widget.RecyclerView
  import com.example.visitacaoamvcm.R
-
+ import kotlinx.android.synthetic.main.item_lista_cadastro_visitantes_recycleview.view.*
 
 
  //classe responsavel por passar para o Firebase os campos a serem utilizados no get
@@ -45,9 +44,10 @@ class InfoCadastroDeVisitantes(
         return holder
      }
 
-
+     // Metodo para exibir os elementos da minha lista
      override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+         val categoria: mCategoriadeVisitantes = categorias.get(position)
+         holder.nome.text = categoria.nome
 
 
      }
@@ -59,8 +59,7 @@ class InfoCadastroDeVisitantes(
 
      // classe que irá pegar os elementos que estão no layout item_Lista_cadastro_visitantes_recycleView
      class ViewHolder(intemView: View): RecyclerView.ViewHolder(intemView) {
-
-         val n = R.id.textView_ListaItem_Categoria_Item_Nome
+         val nome = intemView.textView_ListaItem_Categoria_Item_Nome
 
 
      }
