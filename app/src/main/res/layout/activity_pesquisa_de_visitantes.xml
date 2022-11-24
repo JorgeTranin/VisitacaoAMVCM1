@@ -36,13 +36,14 @@
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userList"
+        android:id="@+id/RecyclerView_listadeVisitantes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="290dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_FireStore_ListaVisitantes_ExibirMais" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_FireStore_ListaVisitantes_ExibirMais"
+        tools:listitem="@layout/item_lista_cadastro_visitantes_recycleview" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
