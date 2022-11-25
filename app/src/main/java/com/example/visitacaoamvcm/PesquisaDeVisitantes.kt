@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_pesquisa_de_visitantes.*
 
 class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.ClickCategoria {
     private lateinit var binding: ActivityPesquisaDeVisitantesBinding
-    private var db: FirebaseFirestore? = null
+    private var bd: FirebaseFirestore? = null
 
     private var reference: CollectionReference? = null
     var searchView: SearchView? = null
@@ -44,12 +44,12 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
                 binding.searchView.clearFocus()
 
                 return false
-          }
+            }
 
-          override fun onQueryTextChange(newText: String?): Boolean {
+            override fun onQueryTextChange(newText: String?): Boolean {
 
-              return false
-          }
+                return false
+            }
 
 
         })
@@ -57,7 +57,36 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     }
 
+    // Função para buscar minha lista no banco de dados
+    private fun Visitantes() {
+
+        bd!!.collection("Visitantes").get().addOnSuccessListener { visitantes ->
+            for (visitante in visitantes) {
+                val dados = visitante.data
+
+                val nome = dados?.get("NomeVisitante").toString()
+                val id = visitante.id
+                //var teste = visitante.toObject(mCategoriadeVisitantes::class.java)
+
+                val item = mCategoriadeVisitantes(nome, 1)
+                categorias.add(item)
+
+
+            }//Fim do for
+
+        }.addOnFailureListener { erros ->
+
+        }
+    }
+
     private fun IniciarRecyclerView() {
+
+
+        //val item1 = mCategoriadeVisitantes("jj", 1)
+        //val item2 = mCategoriadeVisitantes("gg", 2)
+
+        //categorias.add(item1)
+        //categorias.add(item2)
 
 
         // Passando para o adaptador quais itens ele irá trabalhar, responsavel por fazer o gerenciamento da lista
@@ -84,3 +113,5 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
 
 }
+
+
