@@ -1,9 +1,10 @@
 package com.example.visitacaoamvcm
 
-import Business.mCategoriadeVisitantes
+//import Business.mCategoriadeVisitantes
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -18,6 +19,8 @@ class CadastroUsuario : AppCompatActivity() {
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        categoria = intent.getParcelableExtra("categoriaNome")
+        Toast.makeText(this, categoria?.nome, Toast.LENGTH_LONG).show()
         //Elimina a actionBar
         supportActionBar!!.hide()
         binding.btnSalvarCadastro.setOnClickListener {
@@ -27,7 +30,7 @@ class CadastroUsuario : AppCompatActivity() {
             val Endereco = binding.editTextEndereOAtual.text.toString()
 
 
-            categoria = intent.getParcelableExtra("categoriaNomw")
+
 
             //Validação para ver se os campos estão vazios
 

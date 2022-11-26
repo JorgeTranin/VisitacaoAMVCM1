@@ -1,13 +1,13 @@
 package com.example.visitacaoamvcm
 
-import Business.AdapterRecyclerviewCategoria
-import Business.mCategoriadeVisitantes
 import android.content.Intent
 import android.os.Bundle
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.visitacaoamvcm.Business.AdapterRecyclerviewCategoria
+import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityPesquisaDeVisitantesBinding
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,8 +39,9 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         db = FirebaseFirestore.getInstance()
         reference = db?.collection("Categorias")
 
-        //ExibirPrimeirosItensDB()
+        ExibirPrimeirosItensDB()
         IniciarRecyclerView()
+
 
 //-----------------------------------------------------------------Metodos Search para Pesquisa--------------------------------------------------------------------------
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -74,7 +75,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         //val data3 = hashMapOf("nome" to "tranin", "id" to 4)
         //reference!!.document("4").set(data3)
 
-        //val item1 = mCategoriadeVisitantes("jj", 1)
+        // val item1 = mCategoriadeVisitantes("jj", 1)
         //val item2 = mCategoriadeVisitantes("gg", 2)
 
         //categorias.add(item1)
@@ -100,6 +101,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         intent.putExtra("categoriaNome", categoria)
 
 
+
         startActivity(intent)
     }
 
@@ -117,7 +119,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
                 categorias.add(categoria)
             }
-            //AdapterRecyclerviewCategoria?.notifyDataSetChanged()
+            AdapterRecyclerviewCategoria?.notifyDataSetChanged()
         }.addOnFailureListener {
             Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
         }

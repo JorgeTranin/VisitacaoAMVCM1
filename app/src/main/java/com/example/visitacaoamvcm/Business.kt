@@ -1,4 +1,4 @@
- package Business
+ package com.example.visitacaoamvcm.Business
 
  import android.content.Context
  import android.os.Parcel
@@ -23,10 +23,11 @@ class InfoCadastroDeVisitantes(
 
 
  //classe de categoria de visitantes
- class mCategoriadeVisitantes(var nome: String?, var id: Int? = null) : Parcelable {
+ class mCategoriadeVisitantes(var id: Int? = null, var nome: String? = null) : Parcelable {
      constructor(parcel: Parcel) : this(
-         parcel.readString(),
-         parcel.readValue(Int::class.java.classLoader) as? Int
+         parcel.readValue(Int::class.java.classLoader) as? Int,
+         parcel.readString()
+
      ) {
      }
 
