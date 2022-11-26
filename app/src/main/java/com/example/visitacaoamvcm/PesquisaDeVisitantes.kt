@@ -30,8 +30,9 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         binding = ActivityPesquisaDeVisitantesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnFireStoreListaVisitantesExibirMais.setOnClickListener {
-            Toast.makeText(this, "btnFireStoreListaVisitantesExibirMais.", Toast.LENGTH_LONG).show()
+        binding.btnCadastroNovoVisitante.setOnClickListener {
+            val intent = Intent(this, CadastroUsuario::class.java)
+            startActivity(intent)
         }
 
         ///Inicialização variaveis do Banco de dados
@@ -51,7 +52,22 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                var query = db!!.collection("Categorias").orderBy("nome").startAt(newText)
+                    .endAt(newText + "\uf8ff").limit(5)
 
+                query.get().addOnSuccessListener { documentos ->
+                    categorias.clear()
+                    for (documento in documentos) {
+
+                        val categoria = documento.toObject(mCategoriadeVisitantes::class.java)
+
+                        categorias.add(categoria)
+                    }
+                    //Comunicar o adaptador dizendo que a variavel categoria foi auterada
+                    AdapterRecyclerviewCategoria?.notifyDataSetChanged()
+                }.addOnFailureListener {
+                    //Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
+                }
                 return false
             }
 
@@ -61,24 +77,19 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     }
 
+
     //----------------------------------------------------------Fim dos Metodos Search para Pesquisa------------------------------------------------------------
 
 
     private fun IniciarRecyclerView() {
 
 
-        // val data1 = hashMapOf("nome" to "jorge", "id" to 2)
-        //reference!!.document("2").set(data1)
-        //val data2 = hashMapOf("nome" to "garcia", "id" to 3)
-        //reference!!.document("3").set(data2)
-        //val data3 = hashMapOf("nome" to "tranin", "id" to 4)
-        //reference!!.document("4").set(data3)
-
-        // val item1 = mCategoriadeVisitantes("jj", 1)
-        //val item2 = mCategoriadeVisitantes("gg", 2)
-
-        //categorias.add(item1)
-        //categorias.add(item2)
+        //val asasds = hashMapOf("nome" to "Paulo", "id" to 6)
+        //reference!!.document("6").set(asasds)
+        //val ds = hashMapOf("nome" to "garcia", "id" to 7)
+        //reference!!.document("7").set(ds)
+        //val ff = hashMapOf("nome" to "tranin", "id" to 8)
+        //reference!!.document("8").set(ff)
 
 
         // Passando para o adaptador quais itens ele irá trabalhar, responsavel por fazer o gerenciamento da lista
@@ -109,7 +120,8 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     //----------------------------------------------------------Função para ler dados FireBase------------------------------------------------------------
     fun ExibirPrimeirosItensDB() {
 
-        var query = db!!.collection("Categorias")
+
+        var query = db!!.collection("Categorias").orderBy("nome")
 
         query.get().addOnSuccessListener { documentos ->
 

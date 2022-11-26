@@ -24,7 +24,7 @@ class CadastroUsuario : AppCompatActivity() {
         // Pegando as informações passadas pela tela de Pesquisa de Visitantes e passando para a variavel categoria
         categoria = intent.getParcelableExtra("categoriaNome")
 
-        Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
+        //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
 
         //Elimina a actionBar
         supportActionBar!!.hide()

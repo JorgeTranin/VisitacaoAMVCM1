@@ -7,9 +7,8 @@
     android:layout_height="match_parent">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".PesquisaDeVisitantes">
-
 
 
     <SearchView
@@ -18,7 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
         android:iconifiedByDefault="false"
         android:queryBackground="@android:color/transparent"
         android:queryHint="Pesquisar Nome"
@@ -28,15 +26,14 @@
 
     </SearchView>
 
-
-    <Button
-        android:id="@+id/btn_FireStore_ListaVisitantes_ExibirMais"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_CadastroNovoVisitante"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Exibir Mais"
+        android:layout_height="match_parent"
+        android:layout_marginTop="568dp"
+        android:src="@drawable/ic_round_arrow_forward_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.395"
+        app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
@@ -44,10 +41,12 @@
         android:id="@+id/RecyclerView_listadeVisitantes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_FireStore_ListaVisitantes_ExibirMais"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
         tools:listitem="@layout/item_lista_cadastro_visitantes_recycleview" />
 
 
