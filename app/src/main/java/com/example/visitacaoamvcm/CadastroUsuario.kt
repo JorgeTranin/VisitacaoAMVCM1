@@ -19,8 +19,13 @@ class CadastroUsuario : AppCompatActivity() {
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = categoria?.nome
+
+        // Pegando as informações passadas pela tela de Pesquisa de Visitantes e passando para a variavel categoria
         categoria = intent.getParcelableExtra("categoriaNome")
-        Toast.makeText(this, categoria?.nome, Toast.LENGTH_LONG).show()
+
+        Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
+
         //Elimina a actionBar
         supportActionBar!!.hide()
         binding.btnSalvarCadastro.setOnClickListener {
@@ -28,8 +33,6 @@ class CadastroUsuario : AppCompatActivity() {
             val Documento = binding.editTextDocumento.text.toString()
             val dataDeNascimento = binding.editTextDatadeNascimento.text.toString()
             val Endereco = binding.editTextEndereOAtual.text.toString()
-
-
 
 
             //Validação para ver se os campos estão vazios

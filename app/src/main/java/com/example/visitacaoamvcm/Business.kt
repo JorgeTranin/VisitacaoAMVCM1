@@ -32,8 +32,8 @@ class InfoCadastroDeVisitantes(
      }
 
      override fun writeToParcel(parcel: Parcel, flags: Int) {
-         parcel.writeString(nome)
          parcel.writeValue(id)
+         parcel.writeString(nome)
      }
 
      override fun describeContents(): Int {
@@ -80,8 +80,8 @@ class InfoCadastroDeVisitantes(
          val categoria: mCategoriadeVisitantes = categorias.get(position)
          holder.nome.text = categoria.nome
          holder.cardView.setOnClickListener {
-
              clickCategoria.clickCategoria(categoria)
+
          }
 
 

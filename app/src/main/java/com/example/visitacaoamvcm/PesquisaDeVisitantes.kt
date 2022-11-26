@@ -20,7 +20,6 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     private var reference: CollectionReference? = null
     var searchView: SearchView? = null
 
-
     var AdapterRecyclerviewCategoria: AdapterRecyclerviewCategoria? = null
 
     //Inicialização da minha lista que irá conter meus cadastros de Visitantes
@@ -93,13 +92,14 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     //----------------------------------------------------------Função para Click no item da lista------------------------------------------------------------
 
     override fun clickCategoria(categoria: mCategoriadeVisitantes) {
+
+
         val intent = Intent(this, CadastroUsuario::class.java)
 
         //intenção para mandar para tela de cadastro todas as informações do visitante dentro
         // da variavel categoria
-
         intent.putExtra("categoriaNome", categoria)
-
+        //Toast.makeText(this, categoria?.nome.toString() + "--" + categoria?.id, Toast.LENGTH_LONG).show()
 
 
         startActivity(intent)
