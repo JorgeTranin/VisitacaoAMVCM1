@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     //Função responsavel por escutar eventos de clicks
     fun onBtnVisitantes(view: View) {
         // setar variavel intent          esta instancia  e pra onde vai
-        val intent = Intent(this, VisitantesActivity::class.java)
+        val intent = Intent(this, PesquisaDeVisitantes::class.java)
         //starta a ação
         startActivity(intent)
     }

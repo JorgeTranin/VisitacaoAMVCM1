@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_pesquisa_de_visitantes.*
 
 class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.ClickCategoria {
     private lateinit var binding: ActivityPesquisaDeVisitantesBinding
-    private var bd: FirebaseFirestore? = null
+    private var db: FirebaseFirestore? = null
 
     private var reference: CollectionReference? = null
     var searchView: SearchView? = null
@@ -35,8 +35,12 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
             Toast.makeText(this, "btnFireStoreListaVisitantesExibirMais.", Toast.LENGTH_LONG).show()
         }
 
-        IniciarRecyclerView()
+        //Inicialização variaveis do Banco de dados
+        db = FirebaseFirestore.getInstance()
+        reference = db?.collection("Categorias")
 
+        //ExibirPrimeirosItensDB()
+        IniciarRecyclerView()
 
 //-----------------------------------------------------------------Metodos Search para Pesquisa--------------------------------------------------------------------------
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -57,30 +61,18 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     }
 
-    // Função para buscar minha lista no banco de dados
-    private fun Visitantes() {
+    //----------------------------------------------------------Fim dos Metodos Search para Pesquisa------------------------------------------------------------
 
-        bd!!.collection("Visitantes").get().addOnSuccessListener { visitantes ->
-            for (visitante in visitantes) {
-                val dados = visitante.data
-
-                val nome = dados?.get("NomeVisitante").toString()
-                val id = visitante.id
-                //var teste = visitante.toObject(mCategoriadeVisitantes::class.java)
-
-                val item = mCategoriadeVisitantes(nome, 1)
-                categorias.add(item)
-
-
-            }//Fim do for
-
-        }.addOnFailureListener { erros ->
-
-        }
-    }
 
     private fun IniciarRecyclerView() {
 
+
+        // val data1 = hashMapOf("nome" to "jorge", "id" to 2)
+        //reference!!.document("2").set(data1)
+        //val data2 = hashMapOf("nome" to "garcia", "id" to 3)
+        //reference!!.document("3").set(data2)
+        //val data3 = hashMapOf("nome" to "tranin", "id" to 4)
+        //reference!!.document("4").set(data3)
 
         //val item1 = mCategoriadeVisitantes("jj", 1)
         //val item2 = mCategoriadeVisitantes("gg", 2)
@@ -97,8 +89,8 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
         RecyclerView_listadeVisitantes.adapter = AdapterRecyclerviewCategoria
     }
+    //----------------------------------------------------------Função para Click no item da lista------------------------------------------------------------
 
-    //Click no item da lista
     override fun clickCategoria(categoria: mCategoriadeVisitantes) {
         val intent = Intent(this, CadastroUsuario::class.java)
 
@@ -112,6 +104,25 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     }
 
 
+    //----------------------------------------------------------Função para ler dados FireBase------------------------------------------------------------
+    fun ExibirPrimeirosItensDB() {
+
+        var query = db!!.collection("Categorias")
+
+        query.get().addOnSuccessListener { documentos ->
+
+            for (documento in documentos) {
+
+                val categoria = documento.toObject(mCategoriadeVisitantes::class.java)
+
+                categorias.add(categoria)
+            }
+            //AdapterRecyclerviewCategoria?.notifyDataSetChanged()
+        }.addOnFailureListener {
+            Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
+        }
+
+    }
 }
 
 
