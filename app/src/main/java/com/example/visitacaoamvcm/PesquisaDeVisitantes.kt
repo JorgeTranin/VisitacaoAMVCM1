@@ -35,7 +35,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
             Toast.makeText(this, "btnFireStoreListaVisitantesExibirMais.", Toast.LENGTH_LONG).show()
         }
 
-        //Inicialização variaveis do Banco de dados
+        ///Inicialização variaveis do Banco de dados
         db = FirebaseFirestore.getInstance()
         reference = db?.collection("Categorias")
 
