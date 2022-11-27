@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
 
 class CadastroUsuario : AppCompatActivity() {
 
@@ -19,15 +20,20 @@ class CadastroUsuario : AppCompatActivity() {
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = categoria?.nome
 
         // Pegando as informações passadas pela tela de Pesquisa de Visitantes e passando para a variavel categoria
         categoria = intent.getParcelableExtra("categoriaNome")
 
-        //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
+        // se caso categoria vier com algum nome selecionado para auteração na tela de pesquisa de visitantes,
+        // irá preencher nos campos determinados as informações do visitante
+        if (categoria != null) {
+            supportActionBar?.title = categoria?.nome
+            edit_Text_NomeCompleto.hint = categoria?.nome.toString()
+            edit_Text_Documento.hint = categoria?.id.toString()
+            //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
+        }
 
-        //Elimina a actionBar
-        supportActionBar!!.hide()
+
         binding.btnSalvarCadastro.setOnClickListener {
             val NomeVisitante = binding.editTextNomeCompleto.text.toString()
             val Documento = binding.editTextDocumento.text.toString()

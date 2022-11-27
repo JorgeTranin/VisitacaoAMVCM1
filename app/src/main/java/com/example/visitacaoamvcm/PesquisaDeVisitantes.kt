@@ -11,9 +11,11 @@ import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityPesquisaDeVisitantesBinding
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_pesquisa_de_visitantes.*
 
-class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.ClickCategoria {
+class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.ClickCategoria,
+    AdapterRecyclerviewCategoria.UltimoItemExibindoRecyclerView {
     private lateinit var binding: ActivityPesquisaDeVisitantesBinding
     private var db: FirebaseFirestore? = null
 
@@ -24,6 +26,8 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     //Inicialização da minha lista que irá conter meus cadastros de Visitantes
     var categorias: ArrayList<mCategoriadeVisitantes> = ArrayList()
+
+    var proximoQuery: Query? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,17 +87,23 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     private fun IniciarRecyclerView() {
 
-
-        //val asasds = hashMapOf("nome" to "Paulo", "id" to 6)
-        //reference!!.document("6").set(asasds)
-        //val ds = hashMapOf("nome" to "garcia", "id" to 7)
-        //reference!!.document("7").set(ds)
-        //val ff = hashMapOf("nome" to "tranin", "id" to 8)
-        //reference!!.document("8").set(ff)
-
+/*
+        val teteu = hashMapOf("nome" to "teteu", "id" to 10)
+        reference!!.document("10").set(teteu)
+        val joao = hashMapOf("nome" to "garcia", "id" to 11)
+        reference!!.document("11").set(joao)
+        val pedrp = hashMapOf("nome" to "tranin", "id" to 12)
+        reference!!.document("12").set(pedrp)
+        val kaio = hashMapOf("nome" to "kaio", "id" to 13)
+        reference!!.document("13").set(kaio)
+        val pedrin = hashMapOf("nome" to "pedrin", "id" to 14)
+        reference!!.document("14").set(pedrin)
+        val angelo = hashMapOf("nome" to "angelo", "id" to 15)
+        reference!!.document("15").set(angelo)
+*/
 
         // Passando para o adaptador quais itens ele irá trabalhar, responsavel por fazer o gerenciamento da lista
-        AdapterRecyclerviewCategoria = AdapterRecyclerviewCategoria(this, categorias, this)
+        AdapterRecyclerviewCategoria = AdapterRecyclerviewCategoria(this, categorias, this, this)
 
         //Irá determinar como o item vai ser apresentado, podendo apresentar um do lado do outro e diferentes itens
         RecyclerView_listadeVisitantes.layoutManager = LinearLayoutManager(this)
@@ -116,14 +126,26 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         startActivity(intent)
     }
 
+    // metodo que determina ultimo item exibido
+    override fun ultimoItemExibindoRecyclerView(isExibindo: Boolean) {
+        ExibirMaisItensDB()
+        //Toast.makeText(this,"Ultimo", Toast.LENGTH_LONG).show()
+    }
+
 
     //----------------------------------------------------------Função para ler dados FireBase------------------------------------------------------------
     fun ExibirPrimeirosItensDB() {
 
 
-        var query = db!!.collection("Categorias").orderBy("nome")
+        val query = db!!.collection("Categorias").orderBy("nome").limit(5)
 
         query.get().addOnSuccessListener { documentos ->
+
+            //variavel para guardar o ultimo documento, para poder passar na função ExibirMaisItensDB()
+            val ultimoNomeApresentado = documentos.documents[documentos.size() - 1]
+            proximoQuery =
+                db!!.collection("Categorias").orderBy("nome").startAfter(ultimoNomeApresentado)
+                    .limit(3)
 
             for (documento in documentos) {
 
@@ -137,6 +159,41 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         }
 
     }
+
+    //----------------------------------------------------------Função para Exibir mais itens do DB------------------------------------------------------------
+    private fun ExibirMaisItensDB() {
+
+        // Usando o startAfter para começar a exibir depois dos itens apresentados na função ExibirPrimeirosItensDB,
+        // para não repetir os mesmos itens que vieram na primeira consulta
+
+
+        proximoQuery!!.get().addOnSuccessListener { documentos ->
+
+            if (documentos.size() > 0) {
+
+                //variavel para guardar o ultimo documento, para poder passar na função ExibirMaisItensDB()
+                val ultimoNomeApresentado = documentos.documents[documentos.size() - 1]
+                proximoQuery =
+                    db!!.collection("Categorias").orderBy("nome").startAfter(ultimoNomeApresentado)
+                        .limit(3)
+
+                for (documento in documentos) {
+
+                    val categoria = documento.toObject(mCategoriadeVisitantes::class.java)
+
+                    categorias.add(categoria)
+                }
+                AdapterRecyclerviewCategoria?.notifyDataSetChanged()
+            } else {
+                //Toast.makeText(this, "Não existe Mais Cadastros", Toast.LENGTH_LONG).show()
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
+        }
+
+    }
+
+
 }
 
 

@@ -59,7 +59,8 @@ class InfoCadastroDeVisitantes(
  class AdapterRecyclerviewCategoria(
      val context: Context,
      var categorias: ArrayList<mCategoriadeVisitantes>,
-     var clickCategoria: ClickCategoria
+     var clickCategoria: ClickCategoria,
+     var ultimoItemExibindoRecyclerView: UltimoItemExibindoRecyclerView
  ) : RecyclerView.Adapter<AdapterRecyclerviewCategoria.ViewHolder>() {
 
 
@@ -84,6 +85,11 @@ class InfoCadastroDeVisitantes(
 
          }
 
+         //Comparação para
+         if (position == getItemCount() - 1) {
+             ultimoItemExibindoRecyclerView.ultimoItemExibindoRecyclerView(true)
+         }
+
 
      }
 
@@ -98,7 +104,10 @@ class InfoCadastroDeVisitantes(
 
          fun clickCategoria(categoria: mCategoriadeVisitantes)
 
+     }
 
+     interface UltimoItemExibindoRecyclerView {
+         fun ultimoItemExibindoRecyclerView(isExibindo: Boolean)
      }
 
      // classe que irá pegar os elementos que estão no layout item_Lista_cadastro_visitantes_recycleView
