@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 class CadastroUsuario : AppCompatActivity() {
     lateinit var dialog: AlertDialog
@@ -86,12 +87,10 @@ class CadastroUsuario : AppCompatActivity() {
         // se caso categoria vier com algum nome selecionado para auteração na tela de pesquisa de visitantes,
         // irá preencher nos campos determinados as informações do visitante
         if (categoria != null) {
-            val nome = categoria?.nome.toString()
             supportActionBar?.title = categoria?.nome
             edit_Text_NomeCompleto.hint = categoria?.nome.toString()
             edit_Text_Documento.hint = categoria?.id.toString()
-            //downloadImagem(nome)
-            download_Imagem_1()
+            download_Imagem()
 
 
             //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
@@ -107,14 +106,14 @@ class CadastroUsuario : AppCompatActivity() {
 
             //Validação para ver se os campos estão vazios
 
-            if (NomeVisitante.isEmpty() || Documento.isEmpty() || dataDeNascimento.isEmpty() || Endereco.isEmpty()) {
-                //Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+            if (NomeVisitante.isEmpty()) {
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
 
 
             } else {
                 //chamada da função do salvamento no DB passando os paramentros do visitante
                 upload_image(NomeVisitante)
-                salvarVisitante(NomeVisitante)
+                salvarVisitante(Documento.toInt(), NomeVisitante)
             }
 
         }
@@ -124,14 +123,17 @@ class CadastroUsuario : AppCompatActivity() {
 
     //Função responsavel por salvar no DB
     private fun salvarVisitante(
+        documento: Int,
         NomeVisitante: String,
+
 
         //dataDeNascimento: String,
         //Endereco: String
     ) {
         val mapVisitantes = hashMapOf(
+            "id" to documento,
             "nome" to NomeVisitante,
-            "id" to "22",
+
 
             )
         db.collection("Categorias").document(NomeVisitante).set(mapVisitantes)
@@ -227,28 +229,26 @@ class CadastroUsuario : AppCompatActivity() {
 
     }
 
-    fun downloadImagem(referencia: String) {
-        var islandRef = storageRef?.child("imagens/${referencia}")
 
-        val ONE_MEGABYTE: Long = 1024 * 1024
-        islandRef?.getBytes(ONE_MEGABYTE)?.addOnSuccessListener { sucesso ->
-            // Data for "images/island.jpg" is returned, use this as needed
-            Glide.with(this /* context */).load(islandRef).into(btn_ImagemVisitante)
+//----------------------------------------------------------Metodo para fazer o Download da imagem do visitante pelo nome dele------------------------------------------------
+    fun download_Imagem() {
+        val islandRef = storageReference.child("imagens/${categoria?.nome}.jpg")
 
+        val localFile = File.createTempFile("imagens", "jpg")
 
-        }?.addOnFailureListener { erro ->
+        islandRef.getFile(localFile).addOnSuccessListener {
+            // Local temp file has been created
+
+            Glide.with(baseContext).load(localFile).into(btn_ImagemVisitante)
+
+        }.addOnFailureListener {
             // Handle any errors
-            Toast.makeText(this, "erro ${erro.message}", Toast.LENGTH_LONG).show()
         }
+        //val urlimagem = storageReference.child("imagens/JK.jpg")
+            // Got the download URL for 'users/me/profile.png'
 
 
-    }
 
-    fun download_Imagem_1() {
-
-        val urlimagem = storageRef?.child("imagens/${categoria?.nome}")
-
-        Glide.with(baseContext).asBitmap().load(urlimagem).into(btn_ImagemVisitante)
 
 
     }

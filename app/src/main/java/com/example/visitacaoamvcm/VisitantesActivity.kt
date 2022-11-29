@@ -38,7 +38,7 @@ class VisitantesActivity : AppCompatActivity() {
                     val Nascimento = documento.result.get("dataDeNascimento").toString()
 
                     //Passando para meu TextView o valor recebido do servidor
-                    //binding.tvVisitante1111.text = NomedoVisitante
+                    binding.tvVisitante1.text = NomedoVisitante
 
                 }
         }
