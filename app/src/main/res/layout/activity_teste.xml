@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".teste">
 
-    <ImageButton
+    <ImageView
         android:id="@+id/imageButton_Selecionar"
         android:layout_width="84dp"
         android:layout_height="64dp"

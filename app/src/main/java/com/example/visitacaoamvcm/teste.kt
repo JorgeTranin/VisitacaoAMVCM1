@@ -5,16 +5,23 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityTesteBinding
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_teste.*
+import java.io.ByteArrayOutputStream
 
 class teste : AppCompatActivity() {
     lateinit var dialog: AlertDialog
@@ -40,6 +47,8 @@ class teste : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val bitmap: Bitmap = if (Build.VERSION.SDK_INT < 28) {
                 MediaStore.Images.Media.getBitmap(baseContext.contentResolver, result.data?.data)
+
+
             } else {
                 val source = ImageDecoder.createSource(this.contentResolver, result.data?.data!!)
                 ImageDecoder.decodeBitmap(source)
@@ -48,6 +57,9 @@ class teste : AppCompatActivity() {
             binding.imageButtonSelecionar.setImageBitmap(bitmap)
 
         }
+
+    val uri_imagem: Uri? = null
+    var storege: FirebaseStorage? = null
     lateinit var binding: ActivityTesteBinding
     var categoria: mCategoriadeVisitantes? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,17 +70,18 @@ class teste : AppCompatActivity() {
 
         binding.imageButtonSelecionar.setOnClickListener {
 
+            verificaPermissaoDaGaleria()
         }
 
         binding.btnSalvarImagem.setOnClickListener {
-            verificaPermissaoDaGaleria()
+            Upload_image()
         }
 
 
         supportActionBar?.title = categoria?.nome
         categoria = intent.getParcelableExtra("categoriaNome")
 
-
+        storege = Firebase.storage
         //Toast.makeText(this, categoria?.nome.toString(), Toast.LENGTH_LONG).show()
         //textView2.text = categoria?.nome.toString()
     }
@@ -123,6 +136,22 @@ class teste : AppCompatActivity() {
 
         dialog = buider.create()
         dialog.show()
+
+    }
+
+    fun Upload_image() {
+        val bitmap = (imageButton_Selecionar.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+        val data = baos.toByteArray()
+        val reference = storege!!.reference.child("imagens/Imagem1.jpg")
+
+        var uploadTask = reference.putBytes(data)
+        uploadTask.addOnSuccessListener {
+            Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { taskSnapshot ->
+            Toast.makeText(this, "erro ${taskSnapshot.message}", Toast.LENGTH_LONG).show()
+        }
 
     }
 

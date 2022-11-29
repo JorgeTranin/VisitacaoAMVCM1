@@ -1,11 +1,11 @@
 package com.example.visitacaoamvcm
 
-//import Business.mCategoriadeVisitantes
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,10 +15,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
+import java.io.ByteArrayOutputStream
 
 class CadastroUsuario : AppCompatActivity() {
     lateinit var dialog: AlertDialog
@@ -58,15 +63,19 @@ class CadastroUsuario : AppCompatActivity() {
             }
 
         }
+    var storege: FirebaseStorage? = null
+
+    var storageRef = storege?.reference
     private val db = FirebaseFirestore.getInstance()
     private lateinit var binding: ActivityCadastroUsuarioBinding
     var categoria: mCategoriadeVisitantes? = null
+    val storageReference = Firebase.storage.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        storege = Firebase.storage
         binding.btnImagemVisitante.setOnClickListener {
             verificaPermissaoDaGaleria()
         }
@@ -77,9 +86,14 @@ class CadastroUsuario : AppCompatActivity() {
         // se caso categoria vier com algum nome selecionado para auteração na tela de pesquisa de visitantes,
         // irá preencher nos campos determinados as informações do visitante
         if (categoria != null) {
+            val nome = categoria?.nome.toString()
             supportActionBar?.title = categoria?.nome
             edit_Text_NomeCompleto.hint = categoria?.nome.toString()
             edit_Text_Documento.hint = categoria?.id.toString()
+            //downloadImagem(nome)
+            download_Imagem_1()
+
+
             //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
         }
 
@@ -94,10 +108,13 @@ class CadastroUsuario : AppCompatActivity() {
             //Validação para ver se os campos estão vazios
 
             if (NomeVisitante.isEmpty() || Documento.isEmpty() || dataDeNascimento.isEmpty() || Endereco.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+
+
             } else {
                 //chamada da função do salvamento no DB passando os paramentros do visitante
-                salvarVisitante(NomeVisitante, Documento, dataDeNascimento, Endereco)
+                upload_image(NomeVisitante)
+                salvarVisitante(NomeVisitante)
             }
 
         }
@@ -108,17 +125,16 @@ class CadastroUsuario : AppCompatActivity() {
     //Função responsavel por salvar no DB
     private fun salvarVisitante(
         NomeVisitante: String,
-        Documento: String,
-        dataDeNascimento: String,
-        Endereco: String
+
+        //dataDeNascimento: String,
+        //Endereco: String
     ) {
         val mapVisitantes = hashMapOf(
-            "NomeVisitante" to NomeVisitante,
-            "Documento" to Documento,
-            "dataDeNascimento" to dataDeNascimento,
-            "Endereco" to Endereco
-        )
-        db.collection("Visitantes").document(NomeVisitante).set(mapVisitantes)
+            "nome" to NomeVisitante,
+            "id" to "22",
+
+            )
+        db.collection("Categorias").document(NomeVisitante).set(mapVisitantes)
             .addOnCompleteListener { tarefa ->
                 if (tarefa.isSuccessful) {
                     Toast.makeText(this, "Cadastro de Visitante Salvo", Toast.LENGTH_LONG).show()
@@ -190,6 +206,50 @@ class CadastroUsuario : AppCompatActivity() {
 
         dialog = buider.create()
         dialog.show()
+
+    }
+
+    //----------------------------------------------------------Metodo para fazer o Upload da imagem do visitante------------------------------------------------
+    fun upload_image(referencia: String) {
+        val bitmap = (btn_ImagemVisitante.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+        val data = baos.toByteArray()
+        val reference = storege!!.reference.child("imagens/${referencia}.jpg")
+        storageRef = storege!!.reference.child("imagens/${referencia}.jpg")
+
+        var uploadTask = reference.putBytes(data)
+        uploadTask.addOnSuccessListener {
+            Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
+        }.addOnFailureListener { taskSnapshot ->
+            Toast.makeText(this, "erro ${taskSnapshot.message}", Toast.LENGTH_LONG).show()
+        }
+
+    }
+
+    fun downloadImagem(referencia: String) {
+        var islandRef = storageRef?.child("imagens/${referencia}")
+
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        islandRef?.getBytes(ONE_MEGABYTE)?.addOnSuccessListener { sucesso ->
+            // Data for "images/island.jpg" is returned, use this as needed
+            Glide.with(this /* context */).load(islandRef).into(btn_ImagemVisitante)
+
+
+        }?.addOnFailureListener { erro ->
+            // Handle any errors
+            Toast.makeText(this, "erro ${erro.message}", Toast.LENGTH_LONG).show()
+        }
+
+
+    }
+
+    fun download_Imagem_1() {
+
+        val urlimagem = storageRef?.child("imagens/${categoria?.nome}")
+
+        Glide.with(baseContext).asBitmap().load(urlimagem).into(btn_ImagemVisitante)
+
 
     }
 
