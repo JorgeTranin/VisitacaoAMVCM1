@@ -150,6 +150,8 @@ class CadastroUsuario : AppCompatActivity() {
 
     //Função para limpar os campos quando for Salvo no DB
     private fun limparCampos() {
+        // testando github
+
         binding.editTextDocumento.setText("")
         binding.editTextEndereOAtual.setText("")
         binding.editTextDatadeNascimento.setText("")
