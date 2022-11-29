@@ -15,8 +15,16 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:padding="30dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+
+            <ImageView
+                android:id="@+id/imageView_Pesquisa_Visitante"
+                android:layout_width="4dp"
+                android:layout_height="81dp"
+                android:layout_weight="1"
+                android:layout_marginRight="20dp"
+                app:srcCompat="@drawable/ic_baseline_person_24" />
 
             <TextView
                 android:id="@+id/textView_ListaItem_Categoria_Item_Nome"
