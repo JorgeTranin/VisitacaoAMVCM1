@@ -56,7 +56,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                var query = db!!.collection("Categorias").orderBy("nome").startAt(newText)
+                val query = db!!.collection("Categorias").orderBy("nome").startAt(newText)
                     .endAt(newText + "\uf8ff").limit(5)
 
                 query.get().addOnSuccessListener { documentos ->

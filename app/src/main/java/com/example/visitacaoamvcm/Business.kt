@@ -82,7 +82,6 @@ class InfoCadastroDeVisitantes(
          holder.nome.text = categoria.nome
          holder.cardView.setOnClickListener {
              clickCategoria.clickCategoria(categoria)
-
          }
 
          //Comparação para
@@ -112,6 +111,7 @@ class InfoCadastroDeVisitantes(
 
      // classe que irá pegar os elementos que estão no layout item_Lista_cadastro_visitantes_recycleView
      class ViewHolder(intemView: View) : RecyclerView.ViewHolder(intemView) {
+         val imagem = intemView.imageView_Pesquisa_Visitante
          val nome = intemView.textView_ListaItem_Categoria_Item_Nome
 
          val cardView = itemView.cardView_ListaItemCategoria

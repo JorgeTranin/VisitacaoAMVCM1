@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.set
 import com.bumptech.glide.Glide
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -77,6 +79,8 @@ class CadastroUsuario : AppCompatActivity() {
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
         storege = Firebase.storage
+
+
         binding.btnImagemVisitante.setOnClickListener {
             verificaPermissaoDaGaleria()
         }
@@ -88,8 +92,9 @@ class CadastroUsuario : AppCompatActivity() {
         // irá preencher nos campos determinados as informações do visitante
         if (categoria != null) {
             supportActionBar?.title = categoria?.nome
-            edit_Text_NomeCompleto.hint = categoria?.nome.toString()
-            edit_Text_Documento.hint = categoria?.id.toString()
+            edit_Text_NomeCompleto.setText(categoria?.nome)
+            edit_Text_NomeCompleto.isEnabled = false
+            edit_Text_Documento.setText(categoria?.id.toString())
             download_Imagem()
 
 
@@ -154,6 +159,7 @@ class CadastroUsuario : AppCompatActivity() {
         binding.editTextEndereOAtual.setText("")
         binding.editTextDatadeNascimento.setText("")
         binding.editTextNomeCompleto.setText("")
+       // binding.btnImagemVisitante.   //.setImageBitmap("@drawable/ic_baseline_person_24")
     }
 
     //-----------------------------------------------------------------Metodos para buscar imagem na galeria e exibir--------------------------------------------------------------------------
