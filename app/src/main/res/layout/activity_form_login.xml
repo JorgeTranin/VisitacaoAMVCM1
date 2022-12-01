@@ -55,7 +55,7 @@
             android:background="@color/white"
             android:ems="10"
             android:hint="@string/senha"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textPassword"
             android:padding="10dp"
             android:textAlignment="center"
             android:textColorHint="#A1887F"

@@ -1,6 +1,7 @@
 package com.example.visitacaoamvcm
 
 import android.Manifest
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -10,6 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -27,6 +30,8 @@ import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CadastroUsuario : AppCompatActivity() {
     lateinit var dialog: AlertDialog
@@ -73,13 +78,34 @@ class CadastroUsuario : AppCompatActivity() {
     private lateinit var binding: ActivityCadastroUsuarioBinding
     var categoria: mCategoriadeVisitantes? = null
     val storageReference = Firebase.storage.reference
-
+    var cal = Calendar.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
         setContentView(binding.root)
         storege = Firebase.storage
 
+
+
+
+        var dateSetListener = object : DatePickerDialog.OnDateSetListener{
+            override fun onDateSet(p0: DatePicker?, year : Int, month: Int,  dayofmonth: Int) {
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, month)
+                cal.set(Calendar.DAY_OF_MONTH, dayofmonth)
+
+                val formatoDeData = "dd/MM/yyyy"
+                val formatador = SimpleDateFormat(formatoDeData, Locale.ITALY)
+                val TV_data = binding.tvDataDeNascimento
+                TV_data.text = formatador.format(cal.time)
+            }
+
+        }
+        binding.btnSelecionarDataDeNascimento.setOnClickListener {
+
+
+            DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+        }
 
         binding.btnImagemVisitante.setOnClickListener {
             verificaPermissaoDaGaleria()
@@ -105,7 +131,7 @@ class CadastroUsuario : AppCompatActivity() {
         binding.btnSalvarCadastro.setOnClickListener {
             val NomeVisitante = binding.editTextNomeCompleto.text.toString()
             val Documento = binding.editTextDocumento.text.toString()
-            val dataDeNascimento = binding.editTextDatadeNascimento.text.toString()
+            val dataDeNascimento = binding.tvDataDeNascimento.text.toString()
             val Endereco = binding.editTextEndereOAtual.text.toString()
 
 
@@ -159,7 +185,7 @@ class CadastroUsuario : AppCompatActivity() {
 
         binding.editTextDocumento.setText("")
         binding.editTextEndereOAtual.setText("")
-        binding.editTextDatadeNascimento.setText("")
+        binding.tvDataDeNascimento.setText("")
         binding.editTextNomeCompleto.setText("")
        // binding.btnImagemVisitante.   //.setImageBitmap("@drawable/ic_baseline_person_24")
     }
