@@ -28,6 +28,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     var categorias: ArrayList<mCategoriadeVisitantes> = ArrayList()
 
     var proximoQuery: Query? = null
+    var isFiltrando = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,35 +50,42 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
 //-----------------------------------------------------------------Metodos Search para Pesquisa--------------------------------------------------------------------------
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchView.clearFocus()
 
                 return false
             }
-
             override fun onQueryTextChange(newText: String?): Boolean {
-                val query = db!!.collection("Categorias").orderBy("nome").startAt(newText)
-                    .endAt(newText + "\uf8ff").limit(3)
+                isFiltrando = true
+                categorias.clear()
 
-                query.get().addOnSuccessListener { documentos ->
-                    categorias.clear()
-                    for (documento in documentos) {
+                if(newText == "") {
+                  isFiltrando = false
+                    ExibirPrimeirosItensDB()
+                }
+                else {
 
-                        val categoria = documento.toObject(mCategoriadeVisitantes::class.java)
+                    val query = db!!.collection("Categorias").orderBy("nome").startAt(newText)
+                        .endAt(newText + "\uf8ff").limit(3)
 
-                        categorias.add(categoria)
+                    query.get().addOnSuccessListener { documentos ->
+                        for (documento in documentos) {
+
+                            val categoria = documento.toObject(mCategoriadeVisitantes::class.java)
+
+                            categorias.add(categoria)
+                        }
+                        //Comunicar o adaptador dizendo que a variavel categoria foi auterada
+                        AdapterRecyclerviewCategoria?.notifyDataSetChanged()
+                    }.addOnFailureListener {
+                        //Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
                     }
-                    //Comunicar o adaptador dizendo que a variavel categoria foi auterada
-                    AdapterRecyclerviewCategoria?.notifyDataSetChanged()
-                }.addOnFailureListener {
-                    //Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
                 }
                 return false
             }
 
-
         })
-
 
     }
 
@@ -128,7 +136,12 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     // metodo que determina ultimo item exibido
     override fun ultimoItemExibindoRecyclerView(isExibindo: Boolean) {
-        ExibirMaisItensDB()
+
+        if (!isFiltrando){
+
+            ExibirMaisItensDB()
+        }
+
         //Toast.makeText(this,"Ultimo", Toast.LENGTH_LONG).show()
     }
 
