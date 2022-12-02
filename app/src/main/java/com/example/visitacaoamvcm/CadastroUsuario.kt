@@ -364,10 +364,6 @@ class CadastroUsuario : AppCompatActivity() {
         //val urlimagem = storageReference.child("imagens/JK.jpg")
             // Got the download URL for 'users/me/profile.png'
 
-
-
-
-
     }
 
 }

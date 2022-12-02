@@ -61,7 +61,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
                 categorias.clear()
 
                 if(newText == "") {
-                  isFiltrando = false
+                    isFiltrando = false
                     ExibirPrimeirosItensDB()
                 }
                 else {
@@ -81,6 +81,7 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
                     }.addOnFailureListener {
                         //Toast.makeText(this, "erro", Toast.LENGTH_LONG).show()
                     }
+
                 }
                 return false
             }
@@ -140,7 +141,6 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
     override fun ultimoItemExibindoRecyclerView(isExibindo: Boolean) {
 
         if (!isFiltrando){
-
             ExibirMaisItensDB()
         }
 
