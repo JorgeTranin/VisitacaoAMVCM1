@@ -40,7 +40,7 @@ class FormCadastro : AppCompatActivity() {
                         val snackbar = Snackbar.make(
                             View,
                             "Usuario Registrado com Sucesso!",
-                            Snackbar.LENGTH_SHORT
+                            Snackbar.LENGTH_LONG
                         )
                         snackbar.setBackgroundTint(Color.GREEN)
                         snackbar.show()
@@ -71,7 +71,7 @@ class FormCadastro : AppCompatActivity() {
                         is FirebaseAuthUserCollisionException -> "Usuario já cadastrado"
 
                         //App sem acesso a internet
-                        is FirebaseNetworkException -> "Sem conexão a internet"
+                        is FirebaseNetworkException -> "Sem conexão com a internet"
 
                         else -> "Erro ao Cadastrar usuario"
                     }
@@ -79,6 +79,7 @@ class FormCadastro : AppCompatActivity() {
                         snackbar.setBackgroundTint(Color.RED)
                         snackbar.show()
                     }
+                bilding.etSenha.setText("")
             }
 
         }

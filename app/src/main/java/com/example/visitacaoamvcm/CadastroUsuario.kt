@@ -12,13 +12,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.DatePicker
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.set
 import com.bumptech.glide.Glide
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
@@ -26,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_cadastro_usuario.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -79,6 +76,8 @@ class CadastroUsuario : AppCompatActivity() {
     var categoria: mCategoriadeVisitantes? = null
     val storageReference = Firebase.storage.reference
     var cal = Calendar.getInstance()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
@@ -122,32 +121,69 @@ class CadastroUsuario : AppCompatActivity() {
             edit_Text_NomeCompleto.isEnabled = false
             edit_Text_Documento.setText(categoria?.id.toString())
             download_Imagem()
+            binding.btnSalvarCadastro.setOnClickListener {
+                val NomeVisitante = binding.editTextNomeCompleto.text.toString()
+                val Documento = binding.editTextDocumento.text.toString()
+                val dataDeNascimento = binding.tvDataDeNascimento.text.toString()
+                val Endereco = binding.editTextEndereOAtual.text.toString()
 
 
-            //Toast.makeText(this, categoria?.nome.toString() + categoria?.id, Toast.LENGTH_LONG).show()
-        }
+                //Validação para ver se os campos estão vazios
+
+                if (NomeVisitante.isEmpty()) {
+                    Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
 
 
-        binding.btnSalvarCadastro.setOnClickListener {
-            val NomeVisitante = binding.editTextNomeCompleto.text.toString()
-            val Documento = binding.editTextDocumento.text.toString()
-            val dataDeNascimento = binding.tvDataDeNascimento.text.toString()
-            val Endereco = binding.editTextEndereOAtual.text.toString()
+                } else {
+                    //chamada da função do salvamento no DB passando os paramentros do visitante
+                    upload_image(NomeVisitante)
+                    atualizarVisitante(Documento.toInt(), NomeVisitante)
+                    val intent = Intent(this, PesquisaDeVisitantes::class.java)
+                    startActivity(intent)
+                    finish()
 
 
-            //Validação para ver se os campos estão vazios
+                }
 
-            if (NomeVisitante.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
-
-
-            } else {
-                //chamada da função do salvamento no DB passando os paramentros do visitante
-                upload_image(NomeVisitante)
-                salvarVisitante(Documento.toInt(), NomeVisitante)
             }
 
+
+
         }
+
+        else{
+            binding.btnSalvarCadastro.setOnClickListener {
+                val NomeVisitante = binding.editTextNomeCompleto.text.toString()
+                val Documento = binding.editTextDocumento.text.toString()
+                val dataDeNascimento = binding.tvDataDeNascimento.text.toString()
+                val Endereco = binding.editTextEndereOAtual.text.toString()
+
+
+                //Validação para ver se os campos estão vazios
+
+                if (NomeVisitante.isEmpty()) {
+                    Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+
+
+                } else {
+                    //chamada da função do salvamento no DB passando os paramentros do visitante
+
+                    upload_image(NomeVisitante)
+
+                    salvarVisitante(Documento.toInt(), NomeVisitante)
+                }
+
+            }
+        }
+        binding.btnExcluirVisitante.setOnClickListener {
+            deletarVisitante(categoria?.nome.toString())
+            val intent = Intent(this, PesquisaDeVisitantes::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
+
 
 
     }
@@ -187,8 +223,50 @@ class CadastroUsuario : AppCompatActivity() {
         binding.editTextEndereOAtual.setText("")
         binding.tvDataDeNascimento.setText("")
         binding.editTextNomeCompleto.setText("")
-       // binding.btnImagemVisitante.   //.setImageBitmap("@drawable/ic_baseline_person_24")
     }
+
+    //-----------------------------------------------------------------Metodo para atualizar os dados do visitante--------------------------------------------------------------------------
+    private fun atualizarVisitante(
+        documento: Int,
+        NomeVisitante: String,
+
+
+        //dataDeNascimento: String,
+        //Endereco: String
+    ) {
+        val mapVisitantes = hashMapOf(
+            "id" to documento,
+            "nome" to NomeVisitante,
+
+
+            )
+        db.collection("Categorias").document(NomeVisitante).update(mapVisitantes as Map<String, Any>)
+            .addOnCompleteListener { tarefa ->
+                if (tarefa.isSuccessful) {
+                    Toast.makeText(this, "Cadastro de Visitante Salvo", Toast.LENGTH_LONG).show()
+
+                }
+
+            }.addOnFailureListener {
+                Toast.makeText(this, "Erro ao Cadastrar", Toast.LENGTH_LONG).show()
+            }
+    }
+    //-----------------------------------------------------------------Metodo para Deletar os dados do visitante--------------------------------------------------------------------------
+    private fun deletarVisitante(NomeVisitante: String) {
+
+        db.collection("Categorias").document(NomeVisitante).delete()
+            .addOnCompleteListener { tarefa ->
+                if (tarefa.isSuccessful) {
+                    Toast.makeText(this, "Visitante excluido com sucesso", Toast.LENGTH_LONG).show()
+
+                }
+
+            }.addOnFailureListener {
+                Toast.makeText(this, "Erro ao deletar", Toast.LENGTH_LONG).show()
+            }
+    }
+
+
 
     //-----------------------------------------------------------------Metodos para buscar imagem na galeria e exibir--------------------------------------------------------------------------
 
@@ -247,21 +325,26 @@ class CadastroUsuario : AppCompatActivity() {
 
     //----------------------------------------------------------Metodo para fazer o Upload da imagem do visitante------------------------------------------------
     fun upload_image(referencia: String) {
+
         val bitmap = (btn_ImagemVisitante.drawable as BitmapDrawable).bitmap
+
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
         val data = baos.toByteArray()
         val reference = storege!!.reference.child("imagens/${referencia}.jpg")
         storageRef = storege!!.reference.child("imagens/${referencia}.jpg")
 
-        var uploadTask = reference.putBytes(data)
-        uploadTask.addOnSuccessListener {
-            Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
-        }.addOnFailureListener { taskSnapshot ->
-            Toast.makeText(this, "erro ${taskSnapshot.message}", Toast.LENGTH_LONG).show()
+            var uploadTask = reference.putBytes(data)
+
+            uploadTask.addOnSuccessListener {
+                Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
+            }.addOnFailureListener { taskSnapshot ->
+                Toast.makeText(this, "erro ${taskSnapshot.message}", Toast.LENGTH_LONG).show()
+            }
         }
 
-    }
+
+
 
 
 //----------------------------------------------------------Metodo para fazer o Download da imagem do visitante pelo nome dele------------------------------------------------

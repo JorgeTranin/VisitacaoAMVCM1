@@ -8,6 +8,7 @@ import com.example.visitacaoamvcm.databinding.ActivityFormLoginBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -44,20 +45,14 @@ class FormLogin : AppCompatActivity() {
 
                     }.addOnFailureListener { excecoes ->
                         val mensagemDeErro = when (excecoes) {
-                            // Metodo para verificar se a senha esta invalida
-                            is FirebaseAuthWeakPasswordException -> "Digite uma senha com no minimo 6 caracteres"
 
-                            //metodo para ver se o email esta invalido
-                            is FirebaseAuthInvalidCredentialsException -> "Digite um email valido"
-
-                            //Usuario já cadastrado
-
-                            is FirebaseAuthUserCollisionException -> "Usuario já cadastrado"
+                            //metodo para ver se o email esta ou senha esta invalido
+                            is FirebaseAuthInvalidCredentialsException -> "Email ou Senha ivalidos"
 
                             //App sem acesso a internet
                             is FirebaseNetworkException -> "Sem conexão a internet"
 
-                            else -> "Erro ao Cadastrar usuario"
+                            else -> "Erro ao fazer Login $excecoes"
                         }
                         val snackbar = Snackbar.make(View, mensagemDeErro, Snackbar.LENGTH_SHORT)
                         snackbar.setBackgroundTint(Color.RED)

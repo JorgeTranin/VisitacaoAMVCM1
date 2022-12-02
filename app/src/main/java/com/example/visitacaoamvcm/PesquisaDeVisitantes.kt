@@ -130,8 +130,10 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
         intent.putExtra("categoriaNome", categoria)
         //Toast.makeText(this, categoria?.nome.toString() + "--" + categoria?.id, Toast.LENGTH_LONG).show()
 
-
         startActivity(intent)
+
+
+
     }
 
     // metodo que determina ultimo item exibido
