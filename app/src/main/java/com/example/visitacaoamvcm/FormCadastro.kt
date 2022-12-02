@@ -49,7 +49,7 @@ class FormCadastro : AppCompatActivity() {
 
 
                         //Função para navegar para tela de login mas esta indo muito rapido, ajustar o tempo de execução
-                        //navegarTelaLogin()
+                        navegarTelaLogin()
                     }
 
                 }

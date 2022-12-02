@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/ligthGray"
         tools:context=".FormCadastro">
 
@@ -36,14 +36,15 @@
             android:background="@color/white"
             android:ems="10"
             android:hint="@string/e_mail"
-            android:inputType="textPersonName"
+            android:inputType="textEmailAddress"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColorHint="#A1887F"
+            android:textColorHint="@color/border"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:ignore="TextContrastCheck" />
 
         <EditText
             android:id="@+id/et_Senha"
@@ -55,15 +56,17 @@
             android:background="@color/white"
             android:ems="10"
             android:hint="@string/senha"
+            android:importantForAutofill="no"
             android:inputType="textPersonName|textPassword"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColorHint="#A1887F"
+            android:textColorHint="@color/border"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_Email" />
+            app:layout_constraintTop_toBottomOf="@+id/et_Email"
+            tools:ignore="TextContrastCheck" />
 
         <Button
             android:id="@+id/btnCadastrarUsuario"
@@ -73,8 +76,9 @@
             android:layout_marginTop="60dp"
             android:layout_marginEnd="159dp"
             android:layout_marginBottom="256dp"
-            android:background="#FF6E40"
+            android:background="@drawable/formatacao_btn_padrao"
             android:text="@string/cadastrar"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"

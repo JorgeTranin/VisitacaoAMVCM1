@@ -73,7 +73,7 @@
             android:layout_marginTop="60dp"
             android:layout_marginEnd="159dp"
             android:layout_marginBottom="256dp"
-            android:background="@color/purple_700"
+            android:background="@drawable/formatacao_btn_padrao"
             android:textColor="@color/white"
             android:text="@string/Entrar"
             app:layout_constraintBottom_toBottomOf="parent"
