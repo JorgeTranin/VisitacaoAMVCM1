@@ -2,6 +2,7 @@ package com.example.visitacaoamvcm
 
 import android.Manifest
 import android.app.DatePickerDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -11,6 +12,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
+import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -76,8 +79,7 @@ class CadastroUsuario : AppCompatActivity() {
     var categoria: mCategoriadeVisitantes? = null
     val storageReference = Firebase.storage.reference
     var cal = Calendar.getInstance()
-
-
+    var checagemFoto: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCadastroUsuarioBinding.inflate(layoutInflater)
@@ -108,6 +110,8 @@ class CadastroUsuario : AppCompatActivity() {
 
         binding.btnImagemVisitante.setOnClickListener {
             verificaPermissaoDaGaleria()
+            checagemFoto += 1
+
         }
 
         // Pegando as informações passadas pela tela de Pesquisa de Visitantes e passando para a variavel categoria
@@ -154,7 +158,7 @@ class CadastroUsuario : AppCompatActivity() {
         else{
             binding.btnSalvarCadastro.setOnClickListener {
                 val NomeVisitante = binding.editTextNomeCompleto.text.toString()
-                val Documento = binding.editTextDocumento.text.toString()
+                var Documento = binding.editTextDocumento.text.toString()
                 val dataDeNascimento = binding.tvDataDeNascimento.text.toString()
                 val Endereco = binding.editTextEndereOAtual.text.toString()
 
@@ -162,15 +166,26 @@ class CadastroUsuario : AppCompatActivity() {
                 //Validação para ver se os campos estão vazios
 
                 if (NomeVisitante.isEmpty()) {
-                    Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show()
 
 
                 } else {
+                    //pega o tamanho da coleção categoria para salvar o proximo visitante no final da fila
+                    val collection = db.collection("Categorias")
+                    val countQuery = collection.count()
+                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val snapshot = task.result
+                            val tamanho = snapshot.count + 1
+                            salvarVisitante(tamanho.toInt(), NomeVisitante)
+
+                        } else {//caso tenha falha caira aqui
+                            Log.d(TAG, "Count failed: ", task.getException())
+                        }
+                    }
                     //chamada da função do salvamento no DB passando os paramentros do visitante
-
                     upload_image(NomeVisitante)
-
-                    salvarVisitante(Documento.toInt(), NomeVisitante)
+                    //salvarVisitante(Documento.toInt(), NomeVisitante)
                 }
 
             }
@@ -325,23 +340,35 @@ class CadastroUsuario : AppCompatActivity() {
 
     //----------------------------------------------------------Metodo para fazer o Upload da imagem do visitante------------------------------------------------
     fun upload_image(referencia: String) {
+        if (checagemFoto >= 1) {
 
-        val bitmap = (btn_ImagemVisitante.drawable as BitmapDrawable).bitmap
+            val bitmap = (btn_ImagemVisitante.drawable as BitmapDrawable).bitmap
 
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
-        val data = baos.toByteArray()
-        val reference = storege!!.reference.child("imagens/${referencia}.jpg")
-        storageRef = storege!!.reference.child("imagens/${referencia}.jpg")
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos)
+            val data = baos.toByteArray()
+            val reference = storege!!.reference.child("imagens/${referencia}.jpg")
+            storageRef = storege!!.reference.child("imagens/${referencia}.jpg")
 
             var uploadTask = reference.putBytes(data)
 
             uploadTask.addOnSuccessListener {
-                Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
+                //val estadoInicial = binding.btnImagemVisitante.getDrawable(R.drawable.ic_baseline_person_24).
+                btn_ImagemVisitante.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext, // Context
+                        R.drawable.ic_baseline_person_24 // Drawable
+                    )
+                )
+                //Toast.makeText(this, "sucesso", Toast.LENGTH_LONG).show()
+
             }.addOnFailureListener { taskSnapshot ->
                 Toast.makeText(this, "erro ${taskSnapshot.message}", Toast.LENGTH_LONG).show()
             }
         }
+
+
+    }
 
 
 

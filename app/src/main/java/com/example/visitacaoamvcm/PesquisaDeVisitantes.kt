@@ -96,20 +96,6 @@ class PesquisaDeVisitantes : AppCompatActivity(), AdapterRecyclerviewCategoria.C
 
     private fun IniciarRecyclerView() {
 
-/*
-        val teteu = hashMapOf("nome" to "teteu", "id" to 10)
-        reference!!.document("10").set(teteu)
-        val joao = hashMapOf("nome" to "garcia", "id" to 11)
-        reference!!.document("11").set(joao)
-        val pedrp = hashMapOf("nome" to "tranin", "id" to 12)
-        reference!!.document("12").set(pedrp)
-        val kaio = hashMapOf("nome" to "kaio", "id" to 13)
-        reference!!.document("13").set(kaio)
-        val pedrin = hashMapOf("nome" to "pedrin", "id" to 14)
-        reference!!.document("14").set(pedrin)
-        val angelo = hashMapOf("nome" to "angelo", "id" to 15)
-        reference!!.document("15").set(angelo)
-*/
 
         // Passando para o adaptador quais itens ele irá trabalhar, responsavel por fazer o gerenciamento da lista
         AdapterRecyclerviewCategoria = AdapterRecyclerviewCategoria(this, categorias, this, this)
