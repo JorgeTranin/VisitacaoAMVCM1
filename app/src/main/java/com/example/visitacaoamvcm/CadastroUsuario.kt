@@ -2,7 +2,6 @@ package com.example.visitacaoamvcm
 
 import android.Manifest
 import android.app.DatePickerDialog
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,7 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.visitacaoamvcm.Business.mCategoriadeVisitantes
 import com.example.visitacaoamvcm.databinding.ActivityCadastroUsuarioBinding
-import com.google.firebase.firestore.AggregateSource
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -87,10 +86,8 @@ class CadastroUsuario : AppCompatActivity() {
         storege = Firebase.storage
 
 
-
-
-        var dateSetListener = object : DatePickerDialog.OnDateSetListener{
-            override fun onDateSet(p0: DatePicker?, year : Int, month: Int,  dayofmonth: Int) {
+        var dateSetListener = object : DatePickerDialog.OnDateSetListener {
+            override fun onDateSet(p0: DatePicker?, year: Int, month: Int, dayofmonth: Int) {
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, month)
                 cal.set(Calendar.DAY_OF_MONTH, dayofmonth)
@@ -105,7 +102,13 @@ class CadastroUsuario : AppCompatActivity() {
         binding.btnSelecionarDataDeNascimento.setOnClickListener {
 
 
-            DatePickerDialog(this, dateSetListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show()
+            DatePickerDialog(
+                this,
+                dateSetListener,
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
 
         binding.btnImagemVisitante.setOnClickListener {
@@ -121,10 +124,17 @@ class CadastroUsuario : AppCompatActivity() {
         // irá preencher nos campos determinados as informações do visitante
         if (categoria != null) {
             supportActionBar?.title = categoria?.nome
-            edit_Text_NomeCompleto.setText(categoria?.nome)
-            edit_Text_NomeCompleto.isEnabled = false
+            binding.editTextNomeCompleto.setText(categoria?.nome)
+            binding.editTextDocumento.isEnabled = false
+            binding.editTextNomeCompleto.isEnabled = false
             edit_Text_Documento.setText(categoria?.id.toString())
             download_Imagem()
+
+            binding.btnEditarCadastroVisitante.setOnClickListener {
+                binding.editTextNomeCompleto.isEnabled = true
+                binding.editTextDocumento.isEnabled = true
+
+            }
             binding.btnSalvarCadastro.setOnClickListener {
                 val NomeVisitante = binding.editTextNomeCompleto.text.toString()
                 val Documento = binding.editTextDocumento.text.toString()
@@ -152,10 +162,14 @@ class CadastroUsuario : AppCompatActivity() {
             }
 
 
+        } else {
+            val buttonEditarCadastroVisitante: Button = binding.btnEditarCadastroVisitante
+            buttonEditarCadastroVisitante.visibility = View.INVISIBLE
 
-        }
+            val buttonExcluirCadastro: Button = binding.btnExcluirVisitante
+            buttonExcluirCadastro.visibility = View.INVISIBLE
 
-        else{
+
             binding.btnSalvarCadastro.setOnClickListener {
                 val NomeVisitante = binding.editTextNomeCompleto.text.toString()
                 var Documento = binding.editTextDocumento.text.toString()
@@ -171,21 +185,23 @@ class CadastroUsuario : AppCompatActivity() {
 
                 } else {
                     //pega o tamanho da coleção categoria para salvar o proximo visitante no final da fila
-                    val collection = db.collection("Categorias")
-                    val countQuery = collection.count()
-                    countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val snapshot = task.result
-                            val tamanho = snapshot.count + 1
-                            salvarVisitante(tamanho.toInt(), NomeVisitante)
+                    /* val collection = db.collection("Categorias")
+                     val countQuery = collection.count()
+                     countQuery.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+                         if (task.isSuccessful) {
+                             val snapshot = task.result
+                             val tamanho = snapshot.count + 1
+                             salvarVisitante(tamanho.toInt(), NomeVisitante)
 
-                        } else {//caso tenha falha caira aqui
-                            Log.d(TAG, "Count failed: ", task.getException())
-                        }
-                    }
+                         } else {//caso tenha falha caira aqui
+                             Log.d(TAG, "Count failed: ", task.getException())
+                         }
+                     }
+
+                     */
                     //chamada da função do salvamento no DB passando os paramentros do visitante
                     upload_image(NomeVisitante)
-                    //salvarVisitante(Documento.toInt(), NomeVisitante)
+                    salvarVisitante(Documento.toInt(), NomeVisitante)
                 }
 
             }
@@ -196,9 +212,6 @@ class CadastroUsuario : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-
-
 
 
     }
@@ -255,7 +268,8 @@ class CadastroUsuario : AppCompatActivity() {
 
 
             )
-        db.collection("Categorias").document(NomeVisitante).update(mapVisitantes as Map<String, Any>)
+        db.collection("Categorias").document(NomeVisitante)
+            .update(mapVisitantes as Map<String, Any>)
             .addOnCompleteListener { tarefa ->
                 if (tarefa.isSuccessful) {
                     Toast.makeText(this, "Cadastro de Visitante Salvo", Toast.LENGTH_LONG).show()
@@ -266,6 +280,7 @@ class CadastroUsuario : AppCompatActivity() {
                 Toast.makeText(this, "Erro ao Cadastrar", Toast.LENGTH_LONG).show()
             }
     }
+
     //-----------------------------------------------------------------Metodo para Deletar os dados do visitante--------------------------------------------------------------------------
     private fun deletarVisitante(NomeVisitante: String) {
 
@@ -280,7 +295,6 @@ class CadastroUsuario : AppCompatActivity() {
                 Toast.makeText(this, "Erro ao deletar", Toast.LENGTH_LONG).show()
             }
     }
-
 
 
     //-----------------------------------------------------------------Metodos para buscar imagem na galeria e exibir--------------------------------------------------------------------------
@@ -371,10 +385,7 @@ class CadastroUsuario : AppCompatActivity() {
     }
 
 
-
-
-
-//----------------------------------------------------------Metodo para fazer o Download da imagem do visitante pelo nome dele------------------------------------------------
+    //----------------------------------------------------------Metodo para fazer o Download da imagem do visitante pelo nome dele------------------------------------------------
     fun download_Imagem() {
         val islandRef = storageReference.child("imagens/${categoria?.nome}.jpg")
 
@@ -388,8 +399,7 @@ class CadastroUsuario : AppCompatActivity() {
         }.addOnFailureListener {
             // Handle any errors
         }
-        //val urlimagem = storageReference.child("imagens/JK.jpg")
-            // Got the download URL for 'users/me/profile.png'
+
 
     }
 

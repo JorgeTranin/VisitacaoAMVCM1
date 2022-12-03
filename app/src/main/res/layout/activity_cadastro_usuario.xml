@@ -97,8 +97,8 @@
 
         <Button
             android:id="@+id/btn_SalvarCadastro"
-            android:layout_width="196dp"
-            android:layout_height="48dp"
+            android:layout_width="148dp"
+            android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="150dp"
             android:layout_marginBottom="32dp"
@@ -107,7 +107,7 @@
             android:text="Salvar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.116"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_Text_EndereçoAtual"
             app:layout_constraintVertical_bias="1.0" />
@@ -130,15 +130,31 @@
             android:id="@+id/btn_Excluir_Visitante"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:text="Excluir"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.829"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/btn_Editar_Cadastro_Visitante"
+            app:layout_constraintTop_toBottomOf="@+id/edit_Text_EndereçoAtual"
+            app:layout_constraintVertical_bias="0.916" />
+
+        <Button
+            android:id="@+id/btn_Editar_Cadastro_Visitante"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="152dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="32dp"
+            android:text="Editar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_Excluir_Visitante"
             app:layout_constraintStart_toEndOf="@+id/btn_SalvarCadastro"
             app:layout_constraintTop_toBottomOf="@+id/edit_Text_EndereçoAtual"
-            app:layout_constraintVertical_bias="0.909" />
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
